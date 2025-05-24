@@ -16,7 +16,7 @@ export type ErrorResponseT = {
 };
 
 export const useLogin = () => {
-  const { showToast, removeToast } = useToast();
+  const { showToast } = useToast();
   const login = async (data: LoginT): Promise<LoginResponseT> => {
     const response = await fetch(`${URL}/admin/user/login`, {
       method: "POST",
