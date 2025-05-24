@@ -1,3 +1,4 @@
+import { useLogin } from "@/api/user";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +10,30 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import React, { useState } from "react";
 
 function Login() {
+  const { mutate, isPending } = useLogin();
+
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setUserInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    mutate(userInfo);
+  };
+
+  console.log(userInfo);
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="w-full max-w-md px-4">
@@ -26,7 +49,14 @@ function Login() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="name@example.com" type="email" />
+              <Input
+                id="email"
+                placeholder="name@example.com"
+                value={userInfo.email}
+                type="email"
+                onChange={handleChange}
+                name="email"
+              />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -38,9 +68,20 @@ function Login() {
                   Forgot password?
                 </a>
               </div>
-              <Input id="password" placeholder="••••••••" type="password" />
+              <Input
+                id="password"
+                placeholder="••••••••"
+                type="password"
+                value={userInfo.password}
+                onChange={handleChange}
+                name="password"
+              />
             </div>
-            <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
+            <Button
+              className="w-full bg-indigo-600 hover:bg-indigo-700"
+              onClick={handleSubmit}
+              disabled={isPending}
+            >
               Sign in
             </Button>
           </CardContent>
